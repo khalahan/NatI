@@ -359,7 +359,7 @@ def execute(text, speech):
 			else:
 				print 'command not known:',text
 		else:
-			print 'command not known:',text
+			print 'score too low:',text
 	else:
 		score = wakeUp(tokens)
 		print 'do command: wakeUp',score[0]
