@@ -294,6 +294,9 @@ def doWhatIs(text, score, speech, translator):
 		print '*',phrase
 		psw.play(speech.getAudio(translator.translate(phrase)))
 
+from nltk.tokenize import RegexpTokenizer
+tokenizer = RegexpTokenizer(r'\w+')
+
 def execute(text, speech):
 	translator = gapi.Translator('en-uk', speech.lang)
 	global isAwaken
@@ -304,8 +307,7 @@ def execute(text, speech):
 	openAppList = {'editor': 'gedit', 'browser':'google-chrome', 'console':'gnome-terminal', 'calculator':'gnome-calculator'}
 	closeAppList = {'editor': 'gedit', 'browser':'chrome', 'console':'gnome-terminal', 'calculator':'gnome-calculator'}
 
-	from nltk.tokenize import RegexpTokenizer
-	tokenizer = RegexpTokenizer(r'\w+')
+	global tokenizer
 
 	tokens = tokenizer.tokenize(text)
 
