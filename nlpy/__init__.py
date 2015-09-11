@@ -30,11 +30,20 @@ def autoWordToNoun(rawword):
 		word = infVerb 
 	nounsTemp = []
 	for val in [(w, w.derivationally_related_forms()) for w in nltk.corpus.wordnet.lemmas(word)]:
-		nounsTemp.append(set([(w.name).lower() for w in val[1] if '.n.' in str(w)]))
+		try:
+			nounsTemp.append(set([(w.name).lower() for w in val[1] if '.n.' in str(w)]))
+		except:
+			pass
 
 	for synword in nltk.corpus.wordnet.synsets(word):
-		for val in [(w, w.derivationally_related_forms()) for w in synword.lemmas]:
-			nounsTemp.append(set([(w.name).lower() for w in val[1] if '.n.' in str(w)]))
+		try:
+			for val in [(w, w.derivationally_related_forms()) for w in synword.lemmas]:
+				try:
+					nounsTemp.append(set([(w.name).lower() for w in val[1] if '.n.' in str(w)]))
+				except:
+					pass
+		except:
+			pass
 
 	nouns = []
 	for s in nounsTemp:
@@ -49,11 +58,20 @@ def autoWordToVerb(rawword):
 		word = infVerb 
 	nounsTemp = []
 	for val in [(w, w.derivationally_related_forms()) for w in nltk.corpus.wordnet.lemmas(word)]:
-		nounsTemp.append(set([(w.name).lower() for w in val[1] if '.v.' in str(w)]))
+		try:
+			nounsTemp.append(set([(w.name).lower() for w in val[1] if '.v.' in str(w)]))
+		except:
+			pass
 
 	for synword in nltk.corpus.wordnet.synsets(word):
-		for val in [(w, w.derivationally_related_forms()) for w in synword.lemmas]:
-			nounsTemp.append(set([(w.name).lower() for w in val[1] if '.v.' in str(w)]))
+		try:
+			for val in [(w, w.derivationally_related_forms()) for w in synword.lemmas]:
+				try:
+					nounsTemp.append(set([(w.name).lower() for w in val[1] if '.v.' in str(w)]))
+				except:
+					pass
+		except:
+			pass
 
 	nouns = []
 	for s in nounsTemp:
