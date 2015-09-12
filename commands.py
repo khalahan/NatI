@@ -8,6 +8,7 @@ import psw
 import gapi
 
 import player
+import pyautogui
 
 songPlayer = player.Player()
 player.init()
@@ -179,6 +180,13 @@ def whatIs(tokens):
 	score = scoreQuery(tokens, phrase)
 	return score
 
+def write(tokens):
+	phrase = []
+	phrase.append( matchWord(tokens,['write'])[0] )
+	score = scoreQuery(tokens, phrase)
+	return score
+
+
 def doChangeLanguage(text, score, speech, translator):
 	lang = score[1]
 	print lang
@@ -294,6 +302,14 @@ def doWhatIs(text, score, speech, translator):
 		print '*',phrase
 		psw.play(speech.getAudio(translator.translate(phrase)))
 
+def doWrite(text, score, speech, translator):
+	global tokenizer
+	tokens = tokenizer.tokenize(text)
+	token = tokens.pop(0)
+	text = text[len(token)+1:]
+	pyautogui.typewrite(text)
+
+
 from nltk.tokenize import RegexpTokenizer
 tokenizer = RegexpTokenizer(r'\w+')
 
@@ -312,7 +328,7 @@ def execute(text, speech):
 	tokens = tokenizer.tokenize(text)
 
 	if isAwaken:
-		cmds = ['goSleep','changeLanguage','openProgram','closeProgram','whatTime','whatDay','playSong','pauseSong','nextSong','previousSong','whatIs']
+		cmds = ['goSleep','changeLanguage','openProgram','closeProgram','whatTime','whatDay','playSong','pauseSong','nextSong','previousSong','whatIs','write']
 		cmd = {}
 		cmd['changeLanguage'] = changeLanguage(tokens, gapi.languages.keys())
 		cmd['openProgram'] = openProgram(tokens, openAppList.keys())
@@ -325,6 +341,7 @@ def execute(text, speech):
 		cmd['previousSong'] = previousSong(tokens)
 		cmd['goSleep'] = goSleep(tokens)
 		cmd['whatIs'] = whatIs(tokens)
+		cmd['write'] = write(tokens)
 
 		maxScore = 0
 		maxCmd = None
@@ -358,6 +375,8 @@ def execute(text, speech):
 				doGoSleep(text, cmd[maxCmd], speech, translator)
 			elif maxCmd=='whatIs':
 				doWhatIs(text, cmd[maxCmd], speech, translator)
+			elif maxCmd=='write':
+				doWrite(text, cmd[maxCmd], speech, translator)
 			else:
 				print 'command not known:',text
 		else:
