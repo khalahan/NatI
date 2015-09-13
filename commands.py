@@ -9,6 +9,7 @@ import gapi
 
 import player
 import pyautogui
+import config
 
 songPlayer = player.Player()
 player.init()
@@ -77,6 +78,23 @@ def scoreQuery(tokens, phrase):
 	#global stopwords
 	#remaining = remaining.difference(Set(w for w in remaining if w in stopwords))
 	return (score, [w for w in tokens if w in remaining])
+
+def getMatchingCommands(tokens):
+	# get all first keywords
+	keywords = []
+	for cmd, cmds in config.config['commands'].iteritems():
+		keywords.extend(cmds['keywords'][0])
+
+	# get keywords matching tokens, then return associated commands
+	matches = matchWord(tokens,keywords)
+	commands = []
+	for match in matches:
+		if match[1] > 0.7:
+			for cmd, cmds in config.config['commands'].iteritems():
+				if match[2] in cmds['keywords'][0]:
+					commands.append(cmd)
+
+	return commands
 
 def changeLanguage(tokens, languages):
 	phrase = []
@@ -328,6 +346,7 @@ def execute(text, speech):
 	tokens = tokenizer.tokenize(text)
 
 	if isAwaken:
+		#cmds = getMatchingCommands(tokens)
 		cmds = ['goSleep','changeLanguage','openProgram','closeProgram','whatTime','whatDay','playSong','pauseSong','nextSong','previousSong','whatIs','write']
 		cmd = {}
 		cmd['changeLanguage'] = changeLanguage(tokens, gapi.languages.keys())
